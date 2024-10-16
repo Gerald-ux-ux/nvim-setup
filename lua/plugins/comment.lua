@@ -1,14 +1,20 @@
--- Easily comment visual regions/lines
-return {
-  'numToStr/Comment.nvim',
-  opts = {},
-  config = function()
-    local opts = { noremap = true, silent = true }
-    vim.keymap.set('n', '<C-_>', require('Comment.api').toggle.linewise.current, opts)
-    vim.keymap.set('n', '<C-c>', require('Comment.api').toggle.linewise.current, opts)
-    vim.keymap.set('n', '<C-/>', require('Comment.api').toggle.linewise.current, opts)
-    vim.keymap.set('v', '<C-_>', "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>", opts)
-    vim.keymap.set('v', '<C-c>', "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>", opts)
-    vim.keymap.set('v', '<C-/>', "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>", opts)
-  end,
-}
+require("Comment").setup({
+	pre_hook = function(ctx)
+		local U = require("Comment.utils")
+
+		-- Determine the file type
+		local filetype = vim.bo.filetype
+
+		-- If file is jsx or tsx, use block comment style
+		if filetype == "javascriptreact" or filetype == "typescriptreact" then
+			-- Determine whether to use linewise or blockwise comment
+			local type = ctx.ctype == U.ctype.line and "__default" or "__multiline"
+			local location = require("ts_context_commentstring.utils").get_cursor_location()
+
+			return require("ts_context_commentstring.internal").calculate_commentstring({
+				key = type,
+				location = location,
+			})
+		end
+	end,
+})

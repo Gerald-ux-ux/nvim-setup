@@ -463,7 +463,7 @@ return {
 			-- see `:h neo-tree-custom-commands-global`
 			commands = {},
 			window = {
-				position = right,
+				position = "left",
 				width = 40,
 				mapping_options = {
 					noremap = true,
@@ -525,7 +525,7 @@ return {
 			nesting_rules = {},
 			filesystem = {
 				filtered_items = {
-					visible = false, -- when true, they will just be displayed differently than normal items
+					visible = false, -- when true, they will just be displayed differently than normal ieems
 					hide_dotfiles = false,
 					hide_gitignored = false,
 					hide_hidden = false, -- only works on Windows for hidden files/directories
